@@ -10,11 +10,11 @@ int count_bytes(const std::string& fileName) {
     try {
         std::ifstream file;
         file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+        file.open(fileName, std::ios::binary);
         if (!file.is_open()) {
             std::cout << std::format("unable to open file \"{}\".", fileName) << std::endl;
         }
 
-        file.open(fileName, std::ios::binary);
         file.seekg(0, std::ios::end);
         op = file.tellg();
         file.close();

@@ -4,7 +4,7 @@
 #include "wc.hpp"
 
 int main(int argc, char* argv[]) {
-    std::string dataPath = "./data/";
+    std::string dataPath = "../../data/";
     std::string fileName;
     if (argc > 0) {
         fileName = dataPath + argv[2];
