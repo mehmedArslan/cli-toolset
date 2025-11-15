@@ -17,6 +17,9 @@ int main(int argc, char* argv[]) {
         for (const auto& arg: args) {
             if (arg == "-c") {
                 op = count_bytes(completeFilePath);
+            }
+            else if (arg == "-l") {
+                op = get_lines(completeFilePath);
             }   
         }
     }
