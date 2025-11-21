@@ -20,7 +20,10 @@ int main(int argc, char* argv[]) {
             }
             else if (arg == "-l") {
                 op = get_lines(completeFilePath);
-            }   
+            } 
+            else if (arg == "-w") {
+                op = get_words(completeFilePath);
+            }  
         }
     }
 

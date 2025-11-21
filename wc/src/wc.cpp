@@ -48,6 +48,10 @@ int get_words(const std::string& fileName) {
         std::cerr << std::format("unable to open file \"{}\".", fileName);
     }
 
+    std::string word;
+    while (file >> word) {
+        words++;
+    }
     
     file.close();
     return words;
