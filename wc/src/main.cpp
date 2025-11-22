@@ -23,6 +23,9 @@ int main(int argc, char* argv[]) {
             } 
             else if (arg == "-w") {
                 op = get_words(completeFilePath);
+            }
+            else if (arg == "-m") {
+                op = get_characters(completeFilePath);
             }  
         }
     }

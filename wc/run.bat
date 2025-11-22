@@ -3,4 +3,4 @@ cd build
 cmake ..
 cmake --build . --config Release
 cd Release
-wc.exe -w test.txt
+wc.exe -m test.txt
