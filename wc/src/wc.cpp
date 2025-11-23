@@ -71,7 +71,12 @@ size_t get_characters(const std::string& fileName) {
     std::cout << rang::fg::red << "LC_ALL: " << rang::fg::magenta << setlocale(LC_ALL, NULL) 
         << rang::style::reset << std::endl;
 
-    
+    unsigned char c;
+    while (file.read(reinterpret_cast<char*>(&c), 1)) {
+        if ((c & 0xC0) != 0x80) {
+            chars++;
+        }
+    }
     
     return chars;
 }

@@ -1,6 +1,6 @@
 echo 'Release build and run'
-cd build
-cmake ..
+cd "build"
+cmake ".."
 cmake --build . --config Release
 cd Release
-wc.exe -m test.txt
+wc.exe test.txt

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <format>
@@ -26,7 +28,7 @@ int main(int argc, char* argv[]) {
             }
             else if (arg == "-m") {
                 op = get_characters(completeFilePath);
-            }  
+            }
         }
     }
 
