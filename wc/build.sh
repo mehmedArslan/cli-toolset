@@ -20,7 +20,7 @@ fi
 cd "$BUILD_DIR"
 cmake ..
 cmake --build . --config "$config" 
-cd Release
+cd "$config"
 
 ./wc.exe test.txt
 
