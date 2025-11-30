@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "Enter config: " config
+read -p "Enter config [Release (Default) or Debug]: " config
 config=${config:-Release} 
 
 if [ "$config" != "Release" ] && [ "$config" != "Debug" ]; then
@@ -14,13 +14,16 @@ BUILD_DIR="build"
 
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir "$BUILD_DIR"
-    echo "Director $BUILD_DIR created."
+    echo "Directory $BUILD_DIR created."
 fi
 
 cd "$BUILD_DIR"
 cmake ..
 cmake --build . --config "$config" 
 cd Release
-./wc.exe -m test.txt
+
+./wc.exe test.txt
+
+# cat ../../data/test.txt | ./wc.exe
 
 read

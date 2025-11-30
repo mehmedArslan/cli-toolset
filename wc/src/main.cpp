@@ -6,6 +6,11 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <fstream>
+#include <sstream>
+
+#include <stdio.h>
+#include <io.h>
 
 #include "operation.hpp"
 #include "count_bytes.hpp"
@@ -13,64 +18,77 @@
 #include "count_words.hpp"
 #include "count_characters.hpp"
 
-int main(int argc, char* argv[]) {
-    std::unordered_map<std::string, std::unique_ptr<operation>> commands;
-    commands["-c"] = std::make_unique<count_bytes>();
-    commands["-l"] = std::make_unique<count_lines>();
-    commands["-w"] = std::make_unique<count_words>();
-    commands["-m"] = std::make_unique<count_characters>();
- 
+int main(int argc, char *argv[])
+{
+  std::ifstream file;
+  std::string fileName;
+
+  // setup commands for strategy 
+  std::unordered_map<std::string, std::unique_ptr<operation>> commands;
+  commands["-c"] = std::make_unique<count_bytes>();
+  commands["-l"] = std::make_unique<count_lines>();
+  commands["-w"] = std::make_unique<count_words>();
+  commands["-m"] = std::make_unique<count_characters>();
+
+  std::vector<std::string> args(argv + 1, argv + argc);
+  
+  // get input streams
+  std::istream* input;
+  std::stringstream buffer;
+  bool isPipedInput = !_isatty(_fileno(stdin));
+  if (isPipedInput) {
+    buffer << std::cin.rdbuf();
+    input = &buffer;
+  } else {
     std::string dataPath = "../../data/";
-    vector<std::string> args(argv + 1, argv + argc);
-    std::string fileName, completeFilePath;
+    std::string completeFilePath;
     if (!args.empty() && args.back()[0] != '-') {
       fileName = args.back();
       args.pop_back();
-    }
+      completeFilePath = dataPath + fileName;
+      file.open(completeFilePath, std::ios::binary);
 
-    vector<operation*> flags;
-    for (const std::string& flag: args) {
-      if (commands.find(flag) != commands.end()) {
-        flags.emplace_back(commands[flag].get()); 
+      if (!file.is_open()) {
+        std::cerr << "Error opening file: " << completeFilePath << "\n";
+        return 1;
       }
+
+      input = &file;
+    } else {
+      std::cerr << "No input file specified!\n";
+      return 1;
     }
-    // If no flags are provided, return -c, -l, -w
-    if (flags.empty()) {
-      flags.emplace_back(commands["-c"].get());
-      flags.emplace_back(commands["-l"].get());
-      flags.emplace_back(commands["-w"].get());
+  }
+
+
+  // set operations to execute
+  std::vector<operation *> flags;
+  for (const std::string &flag : args)
+  {
+    if (commands.find(flag) != commands.end())
+    {
+      flags.emplace_back(commands[flag].get());
     }
-    
-    // TODO
-    // get input from pipe
-    // need to use istream
-    // use istream instead on ifstream in derived operations?
+  }
+  // If no flags are provided, return -c, -l, -w
+  if (flags.empty())
+  {
+    flags.emplace_back(commands["-c"].get());
+    flags.emplace_back(commands["-l"].get());
+    flags.emplace_back(commands["-w"].get());
+  }
 
+  // execute operations
+  for (operation* op: flags) {
+    // rewind
+    input->clear();
+    input->seekg(0, std::ios::beg);
 
-    // std::string dataPath = "../../data/";
-    // std::string fileName, completeFilePath;
-    // int op = 0;
-    // if (argc > 0) {
-    //     fileName = argv[2];
-    //     completeFilePath = dataPath + fileName;
-    //     std::vector<std::string> args(argv + 1, argv + argc);
-       
-    //     for (const auto& arg: args) {
-    //         if (arg == "-c") {
-    //             op = count_bytes(completeFilePath);
-    //         }
-    //         else if (arg == "-l") {
-    //             op = get_lines(completeFilePath);
-    //         } 
-    //         else if (arg == "-w") {
-    //             op = get_words(completeFilePath);
-    //         }
-    //         else if (arg == "-m") {
-    //             op = get_characters(completeFilePath);
-    //         }
-    //     }
-    // }
+    std::cout << op -> execute(*input) << " ";
+  }
+  if (!isPipedInput) {
+    std::cout << fileName << std::endl;
+  }
 
-    // std::cout << std::format("{} {}", op, fileName) << std::endl;
-    return 0;
+  return 0;
 }

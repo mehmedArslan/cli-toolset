@@ -8,7 +8,7 @@
 #include "operation.hpp"
 
 struct count_characters: operation {
-    size_t execute(const std::string& fileName) override;
+    size_t execute(std::istream& in) override;
 };
 
 #endif

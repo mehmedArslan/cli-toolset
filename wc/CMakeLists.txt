@@ -11,11 +11,16 @@ else ()
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif ()
 
+file(GLOB OP_SOURCES "src/operations/*.cpp")
+
 set(SOURCES
     src/main.cpp
-    src/wc.cpp
+    ${OP_SOURCES}
 )
 
 add_executable(wc ${SOURCES})
 
-target_include_directories(wc PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(wc PRIVATE 
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/operations
+)
